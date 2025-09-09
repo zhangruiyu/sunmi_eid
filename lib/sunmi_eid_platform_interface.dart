@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'sunmi_eid_method_channel.dart';
@@ -38,4 +39,6 @@ abstract class SunmiEidPlatform extends PlatformInterface {
   Future<void> stopCheckCard();
 
   Future<IDCardInfoResult?> getIDCardInfo({required String reqId, required String appKey});
+
+  Future<Uint8List?> parseCardPhoto(String picture);
 }

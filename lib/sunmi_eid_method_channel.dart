@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'dart:typed_data';
 import 'package:flutter/services.dart';
 
 import 'src/eid_event.dart';
@@ -47,5 +48,13 @@ class MethodChannelSunmiEid extends SunmiEidPlatform {
       'appKey': appKey,
     });
     return res != null ? IDCardInfoResult.fromMap(res):null;
+  }
+
+  @override
+  Future<Uint8List?> parseCardPhoto(String picture) async {
+    final res = await methodChannel.invokeMethod<Uint8List>('parseCardPhoto', {
+      'picture': picture,
+    });
+    return res;
   }
 }

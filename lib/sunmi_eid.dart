@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'sunmi_eid_platform_interface.dart';
 import 'src/eid_event.dart';
 import 'src/id_card_info_result.dart';
@@ -23,5 +24,9 @@ class SunmiEid {
        {required String reqId, required String appKey}) async {
      return SunmiEidPlatform.instance
          .getIDCardInfo(reqId: reqId, appKey: appKey);
+   }
+
+   Future<Uint8List?> parseCardPhoto(String picture) {
+     return SunmiEidPlatform.instance.parseCardPhoto(picture);
    }
 }

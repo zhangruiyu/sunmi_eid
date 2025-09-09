@@ -1,7 +1,6 @@
 package com.sunmi.sunmi_eid
 
 import android.app.Activity
-import com.sunmi.eidlibrary.EidCall
 import com.sunmi.eidlibrary.EidConstants
 import com.sunmi.eidlibrary.EidSDK
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -12,7 +11,10 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
-import java.util.Objects
+import android.graphics.Bitmap
+import android.util.Base64
+import java.io.ByteArrayOutputStream
+
 
 /** SunmiEidPlugin */
 class SunmiEidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, EventChannel.StreamHandler {
@@ -35,6 +37,7 @@ class SunmiEidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, EventCha
             "startCheckCard" -> handleStartCheckCard(result, call.argument("param"))
             "getIDCardInfo" -> handleGetIDCardInfo(call, result)
             "stopCheckCard" -> handleStopCheckCard(result)
+            "parseCardPhoto" -> handleParseCardPhoto(call, result)
             else -> result.notImplemented()
         }
     }
@@ -80,10 +83,12 @@ class SunmiEidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, EventCha
         }
         EidSDK.getIDCardInfo(reqId, appKey) { code, data ->
             // Always return { code, data } where data is the JSON string on success, or error message on failure
-            result.success(mapOf(
-                "code" to code,
-                "data" to (data ?: "")
-            ))
+            result.success(
+                mapOf(
+                    "code" to code,
+                    "data" to (data ?: "")
+                )
+            )
         }
     }
 
@@ -101,6 +106,22 @@ class SunmiEidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, EventCha
         }
     }
 
+    private fun handleParseCardPhoto(call: MethodCall, result: Result) {
+        val picture = call.argument<String>("picture")
+        if (picture.isNullOrEmpty()) {
+            result.error("BAD_ARGUMENTS", "Missing picture", null)
+            return
+        }
+        try {
+            val photo = EidSDK.parseCardPhoto(picture)
+            val stream = ByteArrayOutputStream()
+            photo.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            val bytes = stream.toByteArray()
+            result.success(bytes)
+        } catch (e: Exception) {
+            result.error("PARSE_PHOTO_FAILED", e.message, null)
+        }
+    }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         channel.setMethodCallHandler(null)
