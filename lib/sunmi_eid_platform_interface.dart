@@ -41,4 +41,7 @@ abstract class SunmiEidPlatform extends PlatformInterface {
   Future<IDCardInfoResult?> getIDCardInfo({required String reqId, required String appKey});
 
   Future<Uint8List?> parseCardPhoto(String picture);
+
+
+  Future<bool> onDestroy();
 }

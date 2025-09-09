@@ -42,12 +42,14 @@ class MethodChannelSunmiEid extends SunmiEidPlatform {
   }
 
   @override
-  Future<IDCardInfoResult?> getIDCardInfo({required String reqId, required String appKey}) async {
-    final res = await methodChannel.invokeMapMethod<String, dynamic>('getIDCardInfo', {
+  Future<IDCardInfoResult?> getIDCardInfo(
+      {required String reqId, required String appKey}) async {
+    final res =
+        await methodChannel.invokeMapMethod<String, dynamic>('getIDCardInfo', {
       'reqId': reqId,
       'appKey': appKey,
     });
-    return res != null ? IDCardInfoResult.fromMap(res):null;
+    return res != null ? IDCardInfoResult.fromMap(res) : null;
   }
 
   @override
@@ -56,5 +58,11 @@ class MethodChannelSunmiEid extends SunmiEidPlatform {
       'picture': picture,
     });
     return res;
+  }
+
+  @override
+  Future<bool> onDestroy() async {
+    final ok = await methodChannel.invokeMethod<bool>('onDestroy');
+    return ok ?? false;
   }
 }

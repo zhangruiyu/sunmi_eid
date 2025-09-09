@@ -22,6 +22,7 @@ class SunmiEidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, EventCha
     private lateinit var eventChannel: EventChannel
     private var activity: Activity? = null
     private var eventSink: EventChannel.EventSink? = null
+    private var eidReader: com.sunmi.eidlibrary.reader.EidReader? = null
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "sunmi_eid")
@@ -38,6 +39,7 @@ class SunmiEidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, EventCha
             "getIDCardInfo" -> handleGetIDCardInfo(call, result)
             "stopCheckCard" -> handleStopCheckCard(result)
             "parseCardPhoto" -> handleParseCardPhoto(call, result)
+            "onDestroy" -> handleOnDestroy(call, result)
             else -> result.notImplemented()
         }
     }
@@ -121,6 +123,11 @@ class SunmiEidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, EventCha
         } catch (e: Exception) {
             result.error("PARSE_PHOTO_FAILED", e.message, null)
         }
+    }
+
+    private fun handleOnDestroy(call: MethodCall, result: Result) {
+        EidSDK.destroy()
+        result.success(true)
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
