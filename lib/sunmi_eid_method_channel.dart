@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'src/eid_event.dart';
 import 'sunmi_eid_platform_interface.dart';
+import 'src/id_card_info_result.dart';
 
 /// An implementation of [SunmiEidPlatform] that uses method channels.
 class MethodChannelSunmiEid extends SunmiEidPlatform {
@@ -32,5 +33,14 @@ class MethodChannelSunmiEid extends SunmiEidPlatform {
     return _eventChannel
         .receiveBroadcastStream()
         .map((event) => EidEvent.fromMap(event as Map));
+  }
+
+  @override
+  Future<IDCardInfoResult?> getIDCardInfo({required String reqId, required String appKey}) async {
+    final res = await methodChannel.invokeMapMethod<String, dynamic>('getIDCardInfo', {
+      'reqId': reqId,
+      'appKey': appKey,
+    });
+    return res != null ? IDCardInfoResult.fromMap(res):null;
   }
 }

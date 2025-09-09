@@ -2,6 +2,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'sunmi_eid_method_channel.dart';
 import 'src/eid_event.dart';
+import 'src/id_card_info_result.dart';
 
 abstract class SunmiEidPlatform extends PlatformInterface {
   /// Constructs a SunmiEidPlatform.
@@ -33,4 +34,6 @@ abstract class SunmiEidPlatform extends PlatformInterface {
   }
 
   Stream<EidEvent> startCheckCard();
+
+  Future<IDCardInfoResult?> getIDCardInfo({required String reqId, required String appKey});
 }

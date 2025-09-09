@@ -1,6 +1,6 @@
-
 import 'sunmi_eid_platform_interface.dart';
 import 'src/eid_event.dart';
+import 'src/id_card_info_result.dart';
 
 class SunmiEid {
   Future<String?> getPlatformVersion() {
@@ -13,5 +13,11 @@ class SunmiEid {
 
   Stream<EidEvent> startCheckCard() {
     return SunmiEidPlatform.instance.startCheckCard();
+  }
+
+  Future<IDCardInfoResult?> getIDCardInfo(
+      {required String reqId, required String appKey}) async {
+    return SunmiEidPlatform.instance
+        .getIDCardInfo(reqId: reqId, appKey: appKey);
   }
 }

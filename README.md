@@ -31,10 +31,18 @@ Future<void> initEid() async {
 }
 
 void startReading() {
-  eid.startCheckCard().listen((EidEvent e) {
+  eid.startCheckCard().listen((EidEvent e) async {
     // e.code and e.msg
     // Handle states like ERR_NFC_NOT_SUPPORT, ERR_NETWORK_NOT_CONNECTED,
-    // READ_CARD_READY, READ_CARD_START, READ_CARD_SUCCESS (msg=reqId), READ_CARD_FAILED, etc.
+    // READ_CARD_READY, READ_CARD_START,
+    // READ_CARD_SUCCESS (msg=reqId), READ_CARD_FAILED, etc.
+    if (e.code == /* EidConstants.READ_CARD_SUCCESS */ 10007) {
+      final reqId = e.msg; // SDK returns reqId as msg on success
+      // WARNING: Passing appKey from client can leak keys. Prefer a server-to-server (cloud-to-cloud) flow.
+      final info = await eid.getIDCardInfo(reqId: reqId, appKey: 'YOUR_APP_KEY');
+      // info is an IDCardInfoResult object with fields: code and data (data is JSON string on success or error message)
+      // You can decode JSON: final map = jsonDecode(info.data);
+    }
   });
 }
 ```

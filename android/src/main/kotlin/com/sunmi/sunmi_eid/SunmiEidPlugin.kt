@@ -33,6 +33,7 @@ class SunmiEidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, EventCha
             "getPlatformVersion" -> result.success("Android ${android.os.Build.VERSION.RELEASE}")
             "init" -> handleInit(call, result)
             "startCheckCard" -> handleStartCheckCard(result, call.argument("param"))
+            "getIDCardInfo" -> handleGetIDCardInfo(call, result)
             else -> result.notImplemented()
         }
     }
@@ -67,6 +68,22 @@ class SunmiEidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, EventCha
             eventSink?.success(mapOf("code" to code, "msg" to (msg ?: "")))
         }, param)
         result.success(null)
+    }
+
+    private fun handleGetIDCardInfo(call: MethodCall, result: Result) {
+        val reqId = call.argument<String>("reqId")
+        val appKey = call.argument<String>("appKey")
+        if (reqId.isNullOrEmpty() || appKey.isNullOrEmpty()) {
+            result.error("BAD_ARGUMENTS", "Missing reqId or appKey", null)
+            return
+        }
+        EidSDK.getIDCardInfo(reqId, appKey) { code, data ->
+            // Always return { code, data } where data is the JSON string on success, or error message on failure
+            result.success(mapOf(
+                "code" to code,
+                "data" to (data ?: "")
+            ))
+        }
     }
 
 
