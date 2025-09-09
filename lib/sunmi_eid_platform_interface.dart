@@ -35,5 +35,7 @@ abstract class SunmiEidPlatform extends PlatformInterface {
 
   Stream<EidEvent> startCheckCard();
 
+  Future<void> stopCheckCard();
+
   Future<IDCardInfoResult?> getIDCardInfo({required String reqId, required String appKey});
 }

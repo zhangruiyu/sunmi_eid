@@ -34,6 +34,7 @@ class SunmiEidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, EventCha
             "init" -> handleInit(call, result)
             "startCheckCard" -> handleStartCheckCard(result, call.argument("param"))
             "getIDCardInfo" -> handleGetIDCardInfo(call, result)
+            "stopCheckCard" -> handleStopCheckCard(result)
             else -> result.notImplemented()
         }
     }
@@ -83,6 +84,20 @@ class SunmiEidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, EventCha
                 "code" to code,
                 "data" to (data ?: "")
             ))
+        }
+    }
+
+    private fun handleStopCheckCard(result: Result) {
+        val act = activity
+        if (act == null) {
+            result.error("NO_ACTIVITY", "Activity not attached", null)
+            return
+        }
+        try {
+            EidSDK.stopCheckCard(act)
+            result.success(true)
+        } catch (e: Exception) {
+            result.error("STOP_FAILED", e.message, null)
         }
     }
 

@@ -11,13 +11,17 @@ class SunmiEid {
     return SunmiEidPlatform.instance.init(appId);
   }
 
-  Stream<EidEvent> startCheckCard() {
-    return SunmiEidPlatform.instance.startCheckCard();
-  }
+   Stream<EidEvent> startCheckCard() {
+     return SunmiEidPlatform.instance.startCheckCard();
+   }
 
-  Future<IDCardInfoResult?> getIDCardInfo(
-      {required String reqId, required String appKey}) async {
-    return SunmiEidPlatform.instance
-        .getIDCardInfo(reqId: reqId, appKey: appKey);
+  Future<void> stopCheckCard() {
+    return SunmiEidPlatform.instance.stopCheckCard();
   }
+ 
+   Future<IDCardInfoResult?> getIDCardInfo(
+       {required String reqId, required String appKey}) async {
+     return SunmiEidPlatform.instance
+         .getIDCardInfo(reqId: reqId, appKey: appKey);
+   }
 }

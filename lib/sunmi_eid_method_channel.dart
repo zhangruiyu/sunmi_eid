@@ -36,6 +36,11 @@ class MethodChannelSunmiEid extends SunmiEidPlatform {
   }
 
   @override
+  Future<void> stopCheckCard() async {
+    await methodChannel.invokeMethod('stopCheckCard');
+  }
+
+  @override
   Future<IDCardInfoResult?> getIDCardInfo({required String reqId, required String appKey}) async {
     final res = await methodChannel.invokeMapMethod<String, dynamic>('getIDCardInfo', {
       'reqId': reqId,
