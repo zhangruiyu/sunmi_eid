@@ -31,8 +31,8 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
-      platformVersion =
-          await _sunmiEidPlugin.getPlatformVersion() ?? 'Unknown platform version';
+      platformVersion = await _sunmiEidPlugin.getPlatformVersion() ??
+          'Unknown platform version';
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -54,8 +54,22 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+        body: Column(
+          children: [
+            ElevatedButton(
+                onPressed: () {
+                  _sunmiEidPlugin.init("e95f682ba8de4f339bd2011e124be654");
+                },
+                child: const Text('初始化')),
+            ElevatedButton(
+                onPressed: () {
+                  _sunmiEidPlugin.startCheckCard().listen((event) {
+                    print(event);
+                    // stopCheckCard();
+                  });
+                },
+                child: const Text('初始化')),
+          ],
         ),
       ),
     );

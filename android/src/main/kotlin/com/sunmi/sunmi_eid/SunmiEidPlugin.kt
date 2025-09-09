@@ -95,6 +95,7 @@ class SunmiEidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, EventCha
     }
 
     private fun handleStopCheckCard(result: Result) {
+        EidConstants.ERR_NETWORK_NOT_CONNECTED
         val act = activity
         if (act == null) {
             result.error("NO_ACTIVITY", "Activity not attached", null)
