@@ -26,4 +26,8 @@ abstract class SunmiEidPlatform extends PlatformInterface {
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
+
+  Future<bool> init(String appId) {
+    throw UnimplementedError('init() has not been implemented.');
+  }
 }
