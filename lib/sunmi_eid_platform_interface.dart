@@ -1,6 +1,7 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'sunmi_eid_method_channel.dart';
+import 'src/eid_event.dart';
 
 abstract class SunmiEidPlatform extends PlatformInterface {
   /// Constructs a SunmiEidPlatform.
@@ -30,4 +31,6 @@ abstract class SunmiEidPlatform extends PlatformInterface {
   Future<bool> init(String appId) {
     throw UnimplementedError('init() has not been implemented.');
   }
+
+  Stream<EidEvent> startCheckCard();
 }

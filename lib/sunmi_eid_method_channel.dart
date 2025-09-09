@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+import 'src/eid_event.dart';
 import 'sunmi_eid_platform_interface.dart';
 
 /// An implementation of [SunmiEidPlatform] that uses method channels.
@@ -8,6 +9,7 @@ class MethodChannelSunmiEid extends SunmiEidPlatform {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
   final methodChannel = const MethodChannel('sunmi_eid');
+  final EventChannel _eventChannel = const EventChannel('sunmi_eid/events');
 
   @override
   Future<String?> getPlatformVersion() async {
@@ -22,5 +24,13 @@ class MethodChannelSunmiEid extends SunmiEidPlatform {
       'appId': appId,
     });
     return res ?? false;
+  }
+
+  @override
+  Stream<EidEvent> startCheckCard() {
+    methodChannel.invokeMethod('startCheckCard');
+    return _eventChannel
+        .receiveBroadcastStream()
+        .map((event) => EidEvent.fromMap(event as Map));
   }
 }

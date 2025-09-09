@@ -21,22 +21,26 @@ Ensure your project has access to repositories listed in this plugin's android/b
 
 ```dart
 import 'package:sunmi_eid/sunmi_eid.dart';
+import 'package:sunmi_eid/src/eid_event.dart';
 
 final eid = SunmiEid();
 
 Future<void> initEid() async {
-  final result = await eid.init('YOUR_APP_ID');
-  // result contains: {"code": int, "msg": String}
-  if (result['code'] == 0 || result['code'] == 1000 /* example success code */) {
-    // initialized successfully
-  } else {
-    // handle error
-  }
+  final ok = await eid.init('YOUR_APP_ID');
+  // ok is true when EidConstants.EID_INIT_SUCCESS
+}
+
+void startReading() {
+  eid.startCheckCard().listen((EidEvent e) {
+    // e.code and e.msg
+    // Handle states like ERR_NFC_NOT_SUPPORT, ERR_NETWORK_NOT_CONNECTED,
+    // READ_CARD_READY, READ_CARD_START, READ_CARD_SUCCESS (msg=reqId), READ_CARD_FAILED, etc.
+  });
 }
 ```
 
 Notes:
-- On Android, this calls `EidSDK.init(activity, appId, EidCall)` and returns the callback values to Flutter as a Map.
-- If the SDK is missing at runtime, you'll receive `{code: -4, msg: 'EID SDK not found: ...'}`.
-- The exact success code depends on `EidConstants.EID_INIT_SUCCESS` from the SDK.
+- On Android, this calls `EidSDK.init(activity, appId, EidCall)` directly (no reflection required).
+- Use `startCheckCard()` to begin reading. Listen to Stream<EidEvent> and react per the Sunmi docs (NFC not supported/closed, network not connected, READ_CARD_READY/START/SUCCESS/FAILED, etc.).
+- The exact success/ready codes are provided by `EidConstants` in the SDK.
 
