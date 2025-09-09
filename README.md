@@ -22,6 +22,7 @@ Ensure your project has access to repositories listed in this plugin's android/b
 ```dart
 import 'package:sunmi_eid/sunmi_eid.dart';
 import 'package:sunmi_eid/src/eid_event.dart';
+import 'package:sunmi_eid/src/eid_constants.dart';
 
 final eid = SunmiEid();
 
@@ -41,7 +42,8 @@ void startReading() {
       // WARNING: Passing appKey from client can leak keys. Prefer a server-to-server (cloud-to-cloud) flow.
       final info = await eid.getIDCardInfo(reqId: reqId, appKey: 'YOUR_APP_KEY');
       // info is an IDCardInfoResult object with fields: code and data (data is JSON string on success or error message)
-      // You can decode JSON: final map = jsonDecode(info.data);
+      // To map the JSON to a typed model:
+      //   final resultInfo = ResultInfo.fromJson(jsonDecode(info.data));
     }
   });
 }

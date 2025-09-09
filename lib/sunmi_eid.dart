@@ -2,6 +2,8 @@ import 'dart:typed_data';
 import 'sunmi_eid_platform_interface.dart';
 import 'src/eid_event.dart';
 import 'src/id_card_info_result.dart';
+export 'src/eid_constants.dart';
+export 'src/result_info.dart';
 
 class SunmiEid {
   Future<String?> getPlatformVersion() {

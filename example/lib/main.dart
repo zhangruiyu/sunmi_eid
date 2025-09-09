@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -47,6 +49,8 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  String? reqId;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -63,12 +67,30 @@ class _MyAppState extends State<MyApp> {
                 child: const Text('初始化')),
             ElevatedButton(
                 onPressed: () {
-                  _sunmiEidPlugin.startCheckCard().listen((event) {
+                  _sunmiEidPlugin.startCheckCard().listen((event) async {
+                    if (event.code == EidConstants.READ_CARD_SUCCESS) {
+                      reqId = event.msg;
+                      await _sunmiEidPlugin.stopCheckCard();
+                    }
                     print(event);
-                    // stopCheckCard();
                   });
                 },
-                child: const Text('初始化')),
+                child: const Text('读取')),
+            ElevatedButton(
+                onPressed: () async {
+                  if (reqId == null) {
+                    print("请先读取身份证");
+                    return;
+                  }
+                  final r = await _sunmiEidPlugin.getIDCardInfo(
+                      reqId: reqId!,
+                      appKey: '702b4aadef0748af86b7b8caff527a62');
+                  if (r?.code == EidConstants.DECODE_SUCCESS) {
+                    final data = ResultInfo.fromJson(jsonDecode(r!.data));
+                  }
+                  print(r);
+                },
+                child: const Text('getIDCardInfo')),
           ],
         ),
       ),

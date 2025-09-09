@@ -13,6 +13,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import android.graphics.Bitmap
 import android.util.Base64
+import com.sunmi.eidlibrary.bean.ResultInfo
 import java.io.ByteArrayOutputStream
 
 
@@ -71,7 +72,41 @@ class SunmiEidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, EventCha
             return
         }
         EidSDK.startCheckCard(act, { code, msg ->
-            eventSink?.success(mapOf("code" to code, "msg" to (msg ?: "")))
+            // Only emit documented constants; otherwise map to READ_CARD_FAILED and carry original info in msg
+            val safeCode = when (code) {
+                EidConstants.READ_CARD_READY,
+                EidConstants.READ_CARD_START,
+                EidConstants.READ_CARD_SUCCESS,
+                EidConstants.READ_CARD_FAILED,
+                EidConstants.READ_CARD_DELAY,
+                EidConstants.READ_CARD_DELAY_FAILED,
+                EidConstants.INIT_SUCCESS,
+                EidConstants.INIT_FAIL,
+                EidConstants.EID_INIT_SUCCESS,
+                EidConstants.DECODE_SUCCESS,
+                EidConstants.ERR_APP_ID_NULL,
+                EidConstants.ERR_DNS_EXCEPTION,
+                EidConstants.ERR_NETWORK_EXCEPTION,
+                EidConstants.ERR_INNER_CID,
+                EidConstants.ERR_NETWORK_CONNECT_TIMEOUT,
+                EidConstants.ERR_IDCARD_DATA_NULL,
+                EidConstants.ERR_IDCARD_DATA_DECODE_EXCEPTION,
+                EidConstants.ERR_NETWORK_NOT_CONNECTED,
+                EidConstants.ERR_DEVICE_INFO_NULL,
+                EidConstants.ERR_NFC_NOT_SUPPORT,
+                EidConstants.ERR_NFC_CLOSED,
+                EidConstants.ERR_PERMISSION_NOT_GRANTED,
+                EidConstants.FINANCE_SDK_NOT_FOUND,
+                EidConstants.HTTP_UNKNOWN_ERROR,
+                EidConstants.ERR_NOT_INIT,
+                EidConstants.ERR_TRAVEL_PARAMS_ERROR,
+                EidConstants.ERR_ACCOUNT_EXCEPTION -> code
+                else -> EidConstants.READ_CARD_FAILED
+            }
+            val safeMsg = if (safeCode == EidConstants.READ_CARD_FAILED && code != EidConstants.READ_CARD_FAILED) {
+                "${msg ?: ""} (originalCode=$code)"
+            } else (msg ?: "")
+            eventSink?.success(mapOf("code" to safeCode, "msg" to safeMsg))
         }, param)
         result.success(null)
     }
@@ -101,6 +136,7 @@ class SunmiEidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, EventCha
             result.error("NO_ACTIVITY", "Activity not attached", null)
             return
         }
+        ResultInfo
         try {
             EidSDK.stopCheckCard(act)
             result.success(true)
