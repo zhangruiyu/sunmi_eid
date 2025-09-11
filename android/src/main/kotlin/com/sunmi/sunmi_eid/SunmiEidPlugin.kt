@@ -13,6 +13,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import android.graphics.Bitmap
 import android.util.Base64
+import com.sunmi.eidlibrary.EidReader
 import com.sunmi.eidlibrary.bean.ResultInfo
 import java.io.ByteArrayOutputStream
 
@@ -23,7 +24,7 @@ class SunmiEidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, EventCha
     private lateinit var eventChannel: EventChannel
     private var activity: Activity? = null
     private var eventSink: EventChannel.EventSink? = null
-    private var eidReader: com.sunmi.eidlibrary.reader.EidReader? = null
+    private var eidReader: EidReader? = null
 
     override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "sunmi_eid")
@@ -136,7 +137,6 @@ class SunmiEidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, EventCha
             result.error("NO_ACTIVITY", "Activity not attached", null)
             return
         }
-        ResultInfo
         try {
             EidSDK.stopCheckCard(act)
             result.success(true)
