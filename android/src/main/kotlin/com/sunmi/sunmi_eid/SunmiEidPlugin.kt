@@ -1,7 +1,9 @@
 package com.sunmi.sunmi_eid
 
 import android.app.Activity
+import android.graphics.Bitmap
 import com.sunmi.eidlibrary.EidConstants
+import com.sunmi.eidlibrary.EidReader
 import com.sunmi.eidlibrary.EidSDK
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -11,10 +13,6 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
-import android.graphics.Bitmap
-import android.util.Base64
-import com.sunmi.eidlibrary.EidReader
-import com.sunmi.eidlibrary.bean.ResultInfo
 import java.io.ByteArrayOutputStream
 
 
@@ -57,6 +55,7 @@ class SunmiEidPlugin : FlutterPlugin, MethodCallHandler, ActivityAware, EventCha
             result.error("NO_ACTIVITY", "Activity not attached", null)
             return
         }
+        EidSDK.setDebuggable(true)
         EidSDK.init(act, appId) { code, msg ->
             if (code == EidConstants.EID_INIT_SUCCESS) {
                 result.success(true)
