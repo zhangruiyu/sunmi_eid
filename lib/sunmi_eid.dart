@@ -14,8 +14,8 @@ class SunmiEid {
     return SunmiEidPlatform.instance.init(appId);
   }
 
-  Stream<EidEvent> startCheckCard() {
-    return SunmiEidPlatform.instance.startCheckCard();
+  Stream<EidEvent> startCheckCard(Map<String,dynamic>? param) {
+    return SunmiEidPlatform.instance.startCheckCard(param);
   }
 
   Future<void> stopCheckCard() {

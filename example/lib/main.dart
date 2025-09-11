@@ -58,8 +58,18 @@ class _MyAppState extends State<MyApp> {
                 child: const Text('初始化')),
             ElevatedButton(
                 onPressed: () {
+                  ///以下参数可选
+                  //     public static String PARAMS_IS_TRAVEL = "isTravel";
+                  //     public static String PARAMS_TRAVEL_ID = "id";
+                  //     public static String PARAMS_TRAVEL_BIRTHDAY = "birthday";
+                  //     public static String PARAMS_TRAVEL_VALIDITY = "validity";
+                  //     public static String PARAMS_TRAVEL_NEED_READ_IMG = "NEED_READ_IMG";
+                  //     public static String PARAMS_FINANCE_ID_CARD_TYPE = "IDCardType";
+                  //     public static String PARAMS_IS_READ_PICTURE = "IS_READ_PICTURE";
                   StreamSubscription? s;
-                  s = _sunmiEidPlugin.startCheckCard().listen((event) async {
+                  s = _sunmiEidPlugin.startCheckCard({
+                    'IS_READ_PICTURE':true
+                  }).listen((event) async {
                     if (event.code == EidConstants.READ_CARD_SUCCESS) {
                       reqId = event.msg;
                       s?.cancel();

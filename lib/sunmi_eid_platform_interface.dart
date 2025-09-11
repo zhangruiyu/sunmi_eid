@@ -34,7 +34,7 @@ abstract class SunmiEidPlatform extends PlatformInterface {
     throw UnimplementedError('init() has not been implemented.');
   }
 
-  Stream<EidEvent> startCheckCard();
+  Stream<EidEvent> startCheckCard(Map<String, dynamic>? param);
 
   Future<void> stopCheckCard();
 

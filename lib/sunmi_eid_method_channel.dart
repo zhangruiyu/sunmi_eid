@@ -29,8 +29,8 @@ class MethodChannelSunmiEid extends SunmiEidPlatform {
   }
 
   @override
-  Stream<EidEvent> startCheckCard() {
-    methodChannel.invokeMethod('startCheckCard');
+  Stream<EidEvent> startCheckCard(Map<String, dynamic>? param) {
+    methodChannel.invokeMethod('startCheckCard',{'param':param});
     return _eventChannel
         .receiveBroadcastStream()
         .map((event) => EidEvent.fromMap(event as Map));
